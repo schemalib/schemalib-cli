@@ -1,0 +1,18 @@
+type animal {
+
+}
+
+
+
+type searchAnimals {
+
+}
+
+service animalKingdom {
+    action list {
+        request: searchAnimals
+        response: animal
+    }
+
+
+}
