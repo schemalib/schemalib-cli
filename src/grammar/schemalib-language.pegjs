@@ -1,28 +1,45 @@
 {
     var ast = require('ast-types').builders; // only used in Hyperglot ide ... comment out elsewhere
-    function _arrayToObject(arr) {return Object.assign.apply(Object, [{}].concat(props))};
+    function _arrayToObject(props) {return Object.assign.apply(Object, [{}].concat(props))};
 }
 
 
 start
-  = WS* schema:(Type/Service)* WS*
-    { return schema; }
+  = WS* namespace:(Nspace)? WS* use:(Use)* WS* schema:(Type/Service/Use)* WS*
+    { return {namespace, use,schema}; }
 
 // ----- root nodes
 
+Nspace
+    = "namespace" SPACE nspace:NamespaceKeyword WS {
+        return {namespace: nspace, nodeType: "namespace"};
+    }
+
+Use
+    = "use" SPACE name:NamespaceKeyword version:(SPACE "version" SPACE vers:VersionKeyword {return vers})? alias:(SPACE "as" SPACE as:Keyword {return as})?  from:(SPACE "from" SPACE frm:FromKeyword {return frm})? WS {
+        return {name, nodeType: "use",  version, alias, from };
+    }
+
 Type
-    = description:Comment? "type" SPACE name:Keyword SPACE BEGIN_BODY  CLOSE_BODY {
-        return {name, nodeType: "type", description, };
+    = description:Comment* "type" SPACE name:Keyword extendType:(SPACE "extends" SPACE keyw:Keyword {return keyw})? SPACE BEGIN_BODY properties:(PropertyList) CLOSE_BODY {
+        return {name, nodeType: "type",  extendType, description, properties};
     }
 
 Service
-    = description:Comment? "service" SPACE name:Keyword SPACE BEGIN_BODY elements:(Action)* CLOSE_BODY {
-        return {name, nodeType: "service", description, elements};
+    = description:Comment* "service" SPACE name:Keyword extendType:(SPACE "extends" SPACE keyw:Keyword {return keyw})?  SPACE BEGIN_BODY elements:(Action)* CLOSE_BODY {
+        return {name, nodeType: "service", extendType, description, elements};
     }
 
+// ----- sub nodes
+
 Action
-    = description:Comment? "action" SPACE name:Keyword SPACE BEGIN_BODY elements:(PropertyList) CLOSE_BODY {
-        return {name, nodeType: "action", description, elements};
+    = description:Comment? "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(PropertyList) CLOSE_BODY {
+        if (!("response" in properties) && !("request" in properties)) {
+            if (!("request" in properties)) {expected('request');}
+            if (!("response" in properties)) {expected('response');}
+            return false;
+        }
+        return {name, nodeType: "action", description, properties};
     }
 
 Property
@@ -65,8 +82,17 @@ Comment
 Keyword
     = $(([A-Za-z0-9_])*)
 
+NamespaceKeyword
+    = $(([A-Za-z0-9_\.])*)
 
-NumberKeyword = $([.+-]?[0-9]+([.][0-9]+)?)
+NumberKeyword
+    = $([.+-]?[0-9]+([.][0-9]+)?)
+
+FromKeyword
+    = StringLiteral / NamespaceKeyword
+
+VersionKeyword
+    = $(([0-9]+[.])?([0-9]+[.])?[0-9]+)
 
 // ----- literals
 
