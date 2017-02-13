@@ -33,7 +33,7 @@ Service
 // ----- sub nodes
 
 Action
-    = description:Comment? "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(PropertyList) CLOSE_BODY {
+    = description:Comment* "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(PropertyList) CLOSE_BODY {
         if (!("response" in properties) && !("request" in properties)) {
             if (!("request" in properties)) {expected('request');}
             if (!("response" in properties)) {expected('response');}
@@ -43,14 +43,15 @@ Action
     }
 
 Property
-    = name:PropertyName COLON type:PropertyType {
+    = accessType:(Plus / Minus)? name:PropertyName COLON type:PropertyType {
       var returned  = {};
+      type["accessType"] = accessType;
       returned[name] = type;
       return returned;
     }
 
 PropertyName
-    = Keyword / string
+    = MemberKeyword
 
 PropertyType
   = type:Keyword required:"!"?
@@ -91,6 +92,9 @@ NumberKeyword
 FromKeyword
     = StringLiteral / NamespaceKeyword
 
+MemberKeyword
+    = (StringLiteral / Keyword)
+
 VersionKeyword
     = $(([0-9]+[.])?([0-9]+[.])?[0-9]+)
 
@@ -112,12 +116,12 @@ BooleanLiteral
 NumberLiteral
   = value:NumberKeyword { return Number(value.replace(/^[.]/, '0.')); }
 
-string "string"
-  = quotation_mark chars:char* quotation_mark { return chars.join(""); }
+StringKeyword "string"
+  = Quotation_mark chars:Char* Quotation_mark { return chars.join(""); }
 
-char
-  = unescaped
-  / escape
+Char
+  = Unescaped
+  / Escape
     sequence:(
         '"'
       / "\\"
@@ -133,13 +137,22 @@ char
     )
     { return sequence; }
 
-escape
+Escape
   = "\\"
 
-quotation_mark
+Quotation_mark
   = '"'
 
-unescaped
+Minus
+    = "-"
+
+Plus
+    = "+"
+
+Zero
+    = "0"
+
+Unescaped
   = [^\0-\x1F\x22\x5C]
 
 // ----- General
