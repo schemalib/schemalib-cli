@@ -1,9 +1,6 @@
 {
-    //var ast = require('ast-types').builders;
-    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-    function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-    function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
+    var ast = require('ast-types').builders; // only used in Hyperglot ide ... comment out elsewhere
+    function _arrayToObject(arr) {return Object.assign.apply(Object, [{}].concat(props))};
 }
 
 
@@ -24,13 +21,15 @@ Service
     }
 
 Action
-    = description:Comment? "action" SPACE name:Keyword SPACE BEGIN_BODY elements:PropertyList CLOSE_BODY {
+    = description:Comment? "action" SPACE name:Keyword SPACE BEGIN_BODY elements:(PropertyList) CLOSE_BODY {
         return {name, nodeType: "action", description, elements};
     }
 
 Property
     = name:PropertyName COLON type:PropertyType {
-      return { name: name, type: type };
+      var returned  = {};
+      returned[name] = type;
+      return returned;
     }
 
 PropertyName
@@ -43,11 +42,10 @@ PropertyType
     { return { type, list: true }; }
 
 PropertyList
-  = head:Property tail:(EOL_SEPARATOR property:Property { return property; })*
+  = props:(EOL_SEPARATOR? property:Property { return property; })*
     {
-        return [head].concat(_toConsumableArray(tail)).reduce(function (result, property) {
-          return _extends({}, result, property);
-        }, {});
+
+        return _arrayToObject(props);
     }
 
 
