@@ -33,13 +33,23 @@ Service
 // ----- sub nodes
 
 Action
-    = description:Comment* "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(PropertyList) CLOSE_BODY {
-        if (!("response" in properties) && !("request" in properties)) {
-            if (!("request" in properties)) {expected('request');}
-            if (!("response" in properties)) {expected('response');}
-            return false;
-        }
+    = description:Comment* "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(ActionList) CLOSE_BODY {
         return {name, nodeType: "action", description, properties};
+    }
+
+
+ActionList
+  = props:(EOL_SEPARATOR? property:ActionProperty { return property; })*
+    {
+
+        return _arrayToObject(props);
+    }
+
+ActionProperty
+    = name:("request" / "response") COLON type:PropertyType {
+      var returned  = {};
+      returned[name] = type;
+      return returned;
     }
 
 Property
