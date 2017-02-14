@@ -64,10 +64,12 @@ PropertyName
     = MemberKeyword
 
 PropertyType
-  = type:Keyword required:"!"?
-    { return { type, }; }
-  / "[" type:Keyword "]"
-    { return { type, list: true }; }
+  =  "[" SPACE? type:Keyword required:"!"? SPACE? "]"
+    { return { type, required, list: true }; }
+    /
+    type:Keyword required:"!"?
+    { return { type, required, list: false}; }
+
 
 PropertyList
   = props:(EOL_SEPARATOR? property:Property { return property; })*
