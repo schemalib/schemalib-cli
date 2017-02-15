@@ -5,7 +5,7 @@
 
 
 start
-  = WS* namespace:(Nspace)? WS* use:(Use)* WS* schema:(Type/Service/Use)* WS*
+  = WS* namespace:(Nspace)? WS* use:(Use)* WS* schema:(Type/Service/Enum)* WS*
     { return {namespace, use,schema}; }
 
 // ----- root nodes
@@ -25,6 +25,11 @@ Type
         return {name, nodeType: "type",  extendType, description, properties};
     }
 
+Enum
+    = description:Comment* "enum" SPACE name:Keyword BEGIN_BODY enums:(EnumList) CLOSE_BODY {
+        return {name, nodeType: "enum", description, enums};
+    }
+
 Service
     = description:Comment* "service" SPACE name:Keyword extendType:(SPACE "extends" SPACE keyw:Keyword {return keyw})?  SPACE BEGIN_BODY elements:(Action)* CLOSE_BODY {
         return {name, nodeType: "service", extendType, description, elements};
@@ -33,10 +38,19 @@ Service
 // ----- sub nodes
 
 Action
-    = description:Comment* "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(ActionList) CLOSE_BODY {
-        return {name, nodeType: "action", description, properties};
+    = description:Comment* accessType:(Plus / Minus)? "action" SPACE name:Keyword SPACE BEGIN_BODY properties:(ActionList) CLOSE_BODY {
+        return {name, nodeType: "action", accessType, description, properties};
     }
 
+EnumList
+  = first:EnumProperty props:(EOL_SEPARATOR property:EnumProperty { return property; })*
+    {
+
+        return [first, ...props];
+    }
+
+EnumProperty
+    = Keyword
 
 ActionList
   = props:(EOL_SEPARATOR? property:ActionProperty { return property; })*
@@ -64,7 +78,7 @@ PropertyName
     = MemberKeyword
 
 PropertyType
-  =  "[" SPACE? type:Keyword required:"!"? SPACE? "]"
+  =  "[" SPACE? type:Keyword SPACE? "]" required:"!"?
     { return { type, required, list: true }; }
     /
     type:Keyword required:"!"?
@@ -93,10 +107,10 @@ Comment
 // ----- keywords
 
 Keyword
-    = $(([A-Za-z0-9_])*)
+    = $([A-Za-z0-9_]*)
 
 NamespaceKeyword
-    = $(([A-Za-z0-9_\.])*)
+    = $([A-Za-z0-9_\.]*)
 
 NumberKeyword
     = $([.+-]?[0-9]+([.][0-9]+)?)
