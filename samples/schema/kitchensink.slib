@@ -1,17 +1,59 @@
-type animal {
+namespace my.other.some.space.name
+
+use carqualifier.lest.looop.sfdsd.sdfsdf.animal as america
+use carqualifier.lest.looop.sfdsd.sdfsdf.animal2
+use carqualifier.lest.looop.sfdsd.sdfsdf.animal3
+
+// emaum list
+enum role {
+
+    ADMIN
+    USER
+    MANAGER
 
 }
 
+// Animal object
+type user {
 
+    +id: number!
+    firstName: string! //first name
+    lastName: string!  // last name
+    username: string!
+    +password: string!
+    +address: {
+        street: string // street address
+        zip: number
 
-type searchAnimals {
+    }! //test
 
 }
 
-service animalKingdom {
-    action list {
-        request: searchAnimals
-        response: animal
+// employee extending user
+type employee extends user {
+    job: string
+}
+
+type customer extends user {
+    age: string
+}
+
+// Request Object
+// test some more
+type loginRequest {
+    username: string!
+    password: string!
+}
+
+// account services
+service account {
+
+    //logs the user in
+    +action login {
+
+        request: loginRequest
+        response: array
+
     }
 
 

@@ -43,7 +43,7 @@ Action
     }
 
 EnumList
-  = first:EnumProperty props:(EOL_SEPARATOR property:EnumProperty { return property; })*
+  = first:EnumProperty props:(EOL_SEPARATOR* property:EnumProperty { return property; })*
     {
 
         return [first, ...props];
@@ -53,7 +53,7 @@ EnumProperty
     = Keyword
 
 ActionList
-  = props:(EOL_SEPARATOR? property:ActionProperty { return property; })*
+  = props:(EOL_SEPARATOR* property:ActionProperty { return property; })*
     {
 
         return _arrayToObject(props);
@@ -67,9 +67,10 @@ ActionProperty
     }
 
 Property
-    = accessType:(Plus / Minus)? name:PropertyName COLON type:PropertyType {
+    = accessType:(Plus / Minus)? name:PropertyName COLON type:PropertyType SPACE* comment:PropertyComment? {
       var returned  = {};
       type["accessType"] = accessType;
+      type["description"] = comment;
       returned[name] = type;
       return returned;
     }
@@ -83,15 +84,27 @@ PropertyType
     /
     type:Keyword required:"!"?
     { return { type, required, list: false}; }
+    /
+    BEGIN_BODY properties:(PropertyList) CLOSE_BODY required:"!"?
+    {
+
+        return { required, list: false, type: "object" ,properties };
+    }
+
 
 
 PropertyList
-  = props:(EOL_SEPARATOR? property:Property { return property; })*
+  = props:(EOL_SEPARATOR* property:Property { return property; })*
     {
 
         return _arrayToObject(props);
     }
 
+PropertyComment
+    = LINE_COMMENT comment:(!EOL character:CHAR { return character; })* EOL_SEPARATOR
+    {
+        return comment.join("").trim();
+    }
 
 Comment
     = LINE_COMMENT comment:(!EOL character:CHAR { return character; })* EOL_SEPARATOR
@@ -107,7 +120,7 @@ Comment
 // ----- keywords
 
 Keyword
-    = $([A-Za-z0-9_]*)
+    = $([A-Za-z0-9_]+)
 
 NamespaceKeyword
     = $([A-Za-z0-9_\.]*)
