@@ -1,8 +1,9 @@
 {
-  "name": "searchlib-cli",
+  "name": "schemalib",
   "version": "0.1.0",
   "description": "SchemaLib CLI",
   "main": "index.js",
+  "bin": "./bin/schemalib.js",
   "scripts": {
     "test": "mocha"
   },
@@ -13,19 +14,22 @@
   "keywords": [
     "schema",
     "schemalib",
-    "api",
-    "parser",
-    "schema",
+    "api schema",
+    "service",
     "generate",
-    "schema",
     "language",
-    "cli"
+    "cli",
+    "library",
+    "build"
   ],
   "author": "Faruk Brbovic",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/schemalib/schemalib-cli/issues"
   },
+  "engines": {
+      "node": ">=4.3.0"
+    },
   "homepage": "http://schemalib.com",
   "dependencies": {
     "chalk": "^1.1.3",

@@ -45,6 +45,10 @@ type loginRequest {
     password: string!
 }
 
+type blogRequest {
+    blogId: ID
+}
+
 // account services
 service account {
 
@@ -56,5 +60,33 @@ service account {
 
     }
 
+}
+
+// account services
+service blog {
+
+    //logs the user in
+    +action list {
+
+        request: blogRequest
+        response: array
+
+    }
+
+}
+
+app fakeApp {
+
+    services {
+
+        fakeAccount : account {
+            t: t
+        }
+
+        superFakeAccount : account {
+            g: f
+        }
+
+    }
 
 }

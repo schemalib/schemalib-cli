@@ -1,9 +1,7 @@
-#!/usr/bin/env node
-
 const deasync       = require('deasync');
-const commandsDir   = require('path').dirname(require.main.filename) + 'src/commandsDir';
+const commandsDir   = __dirname + '/lib/commandsDir';
 const yargs         = require('yargs');
-const color         = require('chalk');
+const chalk         = require('chalk');
 
 function startCli() {
 
@@ -19,7 +17,7 @@ function startCli() {
             }
             else {
                 yargs.getUsageInstance().showHelp();
-                console.error(color.red.bold("[ERROR]:"), msg);
+                console.error(chalk.red.bold("[ERROR]:"), msg);
                 process.exit(1);
             }
         })
