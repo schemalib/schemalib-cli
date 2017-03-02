@@ -87,6 +87,8 @@ app fakeApp {
             g: f
         }
 
+        test : tester
+
     }
 
 }
