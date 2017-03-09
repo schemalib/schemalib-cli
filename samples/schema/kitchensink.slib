@@ -1,8 +1,7 @@
-namespace my.other.some.space.name
+namespace /my/other/some/space/name
 
-use carqualifier.lest.looop.sfdsd.sdfsdf.animal as america
-use carqualifier.lest.looop.sfdsd.sdfsdf.animal2
-use carqualifier.lest.looop.sfdsd.sdfsdf.animal3
+use /testing/lest/looop/sfdsd/sdfsdf/animal as america
+use /library/component/security/auth/login.type
 
 // emaum list
 enum role {
@@ -53,11 +52,8 @@ type blogRequest {
 service account {
 
     //logs the user in
-    +action login {
-
-        request: loginRequest
-        response: array
-
+    login (loginRequest):array {
+        faru: left
     }
 
 }
@@ -66,12 +62,7 @@ service account {
 service blog {
 
     //logs the user in
-    +action list {
-
-        request: blogRequest
-        response: array
-
-    }
+    +list (blogRequest): array
 
 }
 

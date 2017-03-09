@@ -10,8 +10,8 @@ function startCli() {
         .demand(1)
         .fail(function ( msg, err ) {
             if ( err && err.stack ) {
-                console.error('ERROR:')
-                console.error(msg)
+                console.error(chalk.red.bold('ERROR:',msg))
+                console.error('----------')
                 console.error(err.stack)
                 process.exit(1)
             }
