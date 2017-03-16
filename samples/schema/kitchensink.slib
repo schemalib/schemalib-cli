@@ -39,47 +39,50 @@ type customer extends user {
 
 // Request Object
 // test some more
+@test:something
+@help:2sdfsdf
 type loginRequest {
     username: string!
     password: string!
 }
 
+@test:something
+@help:2sdfsdf
 type blogRequest {
     blogId: ID
 }
 
 // account services
+@test:something
+@help:2sdfsdf
 service account {
 
     //logs the user in
-    login (loginRequest):array {
-        faru: left
-    }
+    login (loginRequest):array
 
 }
 
 // account services
+@test:something
+@help:2sdfsdf
 service blog {
 
     //logs the user in
-    +list (blogRequest): array
+    +list ({
+        left:333
+    }) : {
+        test:fff 
+    }
 
 }
 
+// testing         
+@test:something
+@help:2sdfsdf
 app fakeApp {
 
-    services {
-
-        fakeAccount : account {
-            t: t
-        }
-
-        superFakeAccount : account {
-            g: f
-        }
-
-        test : tester
-
-    }
+    @other:"none" 
+    service account : something  
+    service test: sfsdf  
 
 }
