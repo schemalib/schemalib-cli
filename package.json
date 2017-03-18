@@ -37,6 +37,7 @@
     "convict": "^2.0.0",
     "deasync": "^0.1.9",
     "findup-sync": "^0.4.3",
+    "inquirer": "^3.0.6",
     "json-query": "^2.2.0",
     "merge": "^1.2.0",
     "path-exists": "^3.0.0",

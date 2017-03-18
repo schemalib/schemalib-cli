@@ -21,6 +21,7 @@ function startCli() {
                 process.exit(1);
             }
         })
+        .epilog("Copyright 2017 SchemaLib")
         .help(false)
         .version()
         .recommendCommands()
