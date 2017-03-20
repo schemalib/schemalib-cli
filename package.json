@@ -5,6 +5,7 @@
   "main": "index.js",
   "bin": "./bin/schemalib.js",
   "scripts": {
+    "test": "mocha",
     "prepublish": "semver -r '<4.0.0' $(npm --version) && node_modules/.bin/pegjs lib/grammar/schemalib-language.pegjs && (echo 'Executed Prepublish') || exit 0",
     "prepare": "semver -r '>=4.0.0' $(npm --version) && node_modules/.bin/pegjs lib/grammar/schemalib-language.pegjs && (echo 'Ececuted Prepare') || exit 0"
   },
@@ -37,14 +38,22 @@
     "convict": "^2.0.0",
     "deasync": "^0.1.9",
     "findup-sync": "^0.4.3",
+    "fs-extra": "^2.1.2",
     "inquirer": "^3.0.6",
     "json-query": "^2.2.0",
+    "lodash": "^4.17.4",
     "merge": "^1.2.0",
     "path-exists": "^3.0.0",
     "yargs": "^6.6.0"
   },
   "devDependencies": {
+    "chai": "*",
+    "expect.js": "^0.3.1",
+    "gulp": "^3.9.1",
+    "mocha": "*",
     "pegjs": "^0.10.0",
-    "semver": "^5.3.0"
+    "semver": "^5.3.0",
+    "shelljs": "^0.7.7",
+    "through2": "^2.0.3"
   }
 }
