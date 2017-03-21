@@ -56,11 +56,10 @@ module.exports = {
 
 
     return through.obj(function (file, encoding, callback) {
-console.log(file.path);
+
       var command = that.getCliCommand(file.path, args);
       var env     = _.extend({}, process.env, options.env);
 
-console.log(command);
       logToFile(command);
 
       exec(command, { cwd: file.path, env: env }, function (err, stdout, stderr) {

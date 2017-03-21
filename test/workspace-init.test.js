@@ -31,4 +31,21 @@ describe('workspace', function () {
 
       });
   });
+
+  describe('conf', function () {
+      it('should return DONE', function (done) {
+        var cmd = 'workspace config ';
+
+        gulp
+            .src(helpers.resolveSupportPath('tmp'))
+            .pipe(helpers.runCli(cmd,{pipeStdout: true}))
+            .pipe(helpers.expect(function (output) {
+                expect(output).to.be.a('string');
+                expect(output).to.have.length.above(0);
+                expect(output).to.contain('DONE');
+            }))
+            .pipe(helpers.teardown(done));
+
+      });
+  });
 });
